@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <fstream>
 
 using namespace std;
 
@@ -48,6 +49,27 @@ public:
         cout << "Balance: " <<balance <<endl;
     }
 
+    //Method to save account data to a file
+    void saveToFile(const string&filename) const{
+            ofstream outFile(filename);
+    if(!outFile){
+        throw ios_base::failure("Failed to open file for writing.");
+    }
+    outFile << accountHolder <<"\n"
+            << accountNumber <<"\n"
+            << balance <<"\n";
+    }
+
+    //Method to load account data from a file
+    void loadFromFile(const string&filename){
+            ifstream inFile(filename);
+            if(!inFile){
+                throw ios_base::failure("Failed to open file for reading");
+            }
+            getline(inFile, accountHolder);
+            getline(inFile, accountNumber);
+            inFile >> balance;
+    }
 };
 int main()
 {
@@ -67,5 +89,6 @@ int main()
     catch(const exception&e){
        cerr <<"Error: " <<e.what() <<endl;
        }
+
        return 0;
 }
