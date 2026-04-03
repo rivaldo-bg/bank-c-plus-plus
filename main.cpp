@@ -60,7 +60,9 @@ public:
     }
     outFile << accountHolder <<"\n"
             << accountNumber <<"\n"
-            << balance <<"\n";
+            << balance <<"\n"
+            << username <<"\n"
+            << password <<"\n";
     }
 
     //Method to load account data from a file
@@ -72,6 +74,9 @@ public:
             getline(inFile, accountHolder);
             getline(inFile, accountNumber);
             inFile >> balance;
+            inFile.ignore();
+            getline(inFile, username);
+            getline(inFile, password);
     }
 
     //Method to create a new account

@@ -1,3 +1,5 @@
 Alice Johnson
 123456789
 500
+alice
+securePassword
