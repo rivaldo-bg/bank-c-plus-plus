@@ -10,11 +10,14 @@ private:
     string accountHolder;
     string accountNumber;
     double balance;
+    string username;
+    string password;
+    bool loggedIn;
 
 public:
     //Constructor to initialize the account
-    BankAccount(const string&holder, const string&number)
-    :accountHolder(holder), accountNumber(number), balance(0.0){}
+    BankAccount(string_view holder, string_view number, string_view user, string_view pass):
+        accountHolder(holder), accountNumber(number), balance(0.0), username(user), password(pass), loggedIn(false) {}
 
     //Method to deposit money into the account
     void deposit(double amount){
@@ -70,27 +73,61 @@ public:
             getline(inFile, accountNumber);
             inFile >> balance;
     }
+
+    //Method to create a new account
+    static BankAccount createAccount(string_view holder, string_view number, string_view user, string_view pass){
+    return BankAccount(holder, number, user, pass);
+    }
+
+    //Method to authenticate user
+    bool login(const string&user, const string&pass){
+    if(username==user && password==pass){
+        loggedIn = true;
+        cout<<"Login successful!"<<endl;
+        return true;
+    }
+    cerr << "Login failed: Incorrect username or password."<<endl;
+    return false;
+    }
+
+    //Method to log out
+    void logout(){
+    loggedIn= false;
+    cout << "Logged out successfully." <<endl;
+    }
+
+    //Method to check if the user is logged in
+    bool isLoggedIn() const{
+    return loggedIn;
+    }
 };
 int main()
 {
     try{
-        //Create a new bank account for Alice
-        BankAccount myAccount("Alice Johnson", "123456789");
-        myAccount.deposit(500);
-        myAccount.saveToFile("account_data.txt");
+        //Create a new bank account
+        BankAccount myAccount = BankAccount::createAccount("Alice Johnson", "123456789", "alice", "securePassword");
 
-        //Simulate restarting the application
-        BankAccount loadedAccount("","");
+        //Attempt login
+        if(myAccount.login("alice","securePassword")){
+            myAccount.deposit(500);
+            myAccount.saveToFile("account_data.txt");
+            myAccount.displayAccountInfo();
+            }
+
+        //Log out
+        myAccount.logout();
+
+        //Attempt to log in with incorrect password
+        if(!myAccount.login("alice","wrongPassword")){
+            cout << "Please try again!" <<endl;
+            }
+
+        //Load account data
+        BankAccount loadedAccount("","","","");
         loadedAccount.loadFromFile("account_data.txt");
-        loadedAccount.displayAccountInfo();
-
-        /*//Performs some transactions
-        myAccount.deposit(500);
-        myAccount.withdraw(200);
-        cout << "Current balance: "<< myAccount.getBalance() <<endl;
-
-        //Attempt to withdraw more than the balance
-        myAccount.withdraw(400);//This will throw an exception*/
+        if(loadedAccount.login("alice","securePassword")){
+            loadedAccount.displayAccountInfo();
+            }
        }
     catch(const exception&e){
        cerr <<"Error: " <<e.what() <<endl;
