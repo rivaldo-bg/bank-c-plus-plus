@@ -76,15 +76,21 @@ int main()
     try{
         //Create a new bank account for Alice
         BankAccount myAccount("Alice Johnson", "123456789");
-        myAccount.displayAccountInfo();
+        myAccount.deposit(500);
+        myAccount.saveToFile("account_data.txt");
 
-        //Performs some transactions
+        //Simulate restarting the application
+        BankAccount loadedAccount("","");
+        loadedAccount.loadFromFile("account_data.txt");
+        loadedAccount.displayAccountInfo();
+
+        /*//Performs some transactions
         myAccount.deposit(500);
         myAccount.withdraw(200);
         cout << "Current balance: "<< myAccount.getBalance() <<endl;
 
         //Attempt to withdraw more than the balance
-        myAccount.withdraw(400);//This will throw an exception
+        myAccount.withdraw(400);//This will throw an exception*/
        }
     catch(const exception&e){
        cerr <<"Error: " <<e.what() <<endl;
