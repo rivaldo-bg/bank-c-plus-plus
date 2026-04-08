@@ -3,41 +3,39 @@
 #include <stdexcept>
 #include <fstream>
 
-using namespace std;
-
 class BankAccount{
 private:
-    string accountHolder;
-    string accountNumber;
+    std::string accountHolder;
+    std::string accountNumber;
     double balance;
-    string username;
-    string password;
+    std::string username;
+    std::string password;
     bool loggedIn;
 
 public:
     //Constructor to initialize the account
-    BankAccount(string_view holder, string_view number, string_view user, string_view pass):
+    BankAccount(std::string_view holder, std::string_view number, std::string_view user, std::string_view pass):
         accountHolder(holder), accountNumber(number), balance(0.0), username(user), password(pass), loggedIn(false) {}
 
     //Method to deposit money into the account
     void deposit(double amount){
        if(amount <= 0){
-        throw invalid_argument("Deposit amount must be positive!");
+        throw std::invalid_argument("Deposit amount must be positive!");
        }
        balance+= amount;
-       cout<< "Deposited: " << amount << " New balance: "<< balance <<endl;
+       std::cout<< "Deposited: " << amount << " New balance: " << balance << std::endl;
     }
 
     //Method to withdraw money from the account
     void withdraw(double amount){
        if(amount <= 0){
-        throw invalid_argument("Withdrawal amount must be positive!");
+        throw std::invalid_argument("Withdrawal amount must be positive!");
        }
        if(amount > balance){
-        throw out_of_range("Insufficient funds");
+        throw std::out_of_range("Insufficient funds");
        }
        balance-=amount;
-       cout<< "Withdrew: " <<amount <<" New Balance: "<< balance <<endl;
+       std::cout << "Withdrew: " <<amount <<" New Balance: "<< balance << std::endl;
     }
 
     //Method to check the current balance
@@ -47,16 +45,16 @@ public:
 
     //Method to display account information
     void displayAccountInfo() const{
-        cout << "Account Holder: " << accountHolder <<endl;
-        cout << "Account Number: " << accountNumber <<endl;
-        cout << "Balance: " <<balance <<endl;
+        std::cout << "Account Holder: " << accountHolder << std::endl;
+        std::cout << "Account Number: " << accountNumber << std::endl;
+        std::cout << "Balance: " <<balance << std::endl;
     }
 
     //Method to save account data to a file
-    void saveToFile(const string&filename) const{
-            ofstream outFile(filename);
+    void saveToFile(const std::string&filename) const{
+            std::ofstream outFile(filename);
     if(!outFile){
-        throw ios_base::failure("Failed to open file for writing.");
+        throw std::ios_base::failure("Failed to open file for writing.");
     }
     outFile << accountHolder <<"\n"
             << accountNumber <<"\n"
@@ -66,39 +64,39 @@ public:
     }
 
     //Method to load account data from a file
-    void loadFromFile(const string&filename){
-            ifstream inFile(filename);
+    void loadFromFile(const std::string&filename){
+            std::ifstream inFile(filename);
             if(!inFile){
-                throw ios_base::failure("Failed to open file for reading");
+                throw std::ios_base::failure("Failed to open file for reading");
             }
-            getline(inFile, accountHolder);
-            getline(inFile, accountNumber);
+            std::getline(inFile, accountHolder);
+            std::getline(inFile, accountNumber);
             inFile >> balance;
             inFile.ignore();
-            getline(inFile, username);
-            getline(inFile, password);
+            std::getline(inFile, username);
+            std::getline(inFile, password);
     }
 
     //Method to create a new account
-    static BankAccount createAccount(string_view holder, string_view number, string_view user, string_view pass){
+    static BankAccount createAccount(std::string_view holder, std::string_view number, std::string_view user, std::string_view pass){
     return BankAccount(holder, number, user, pass);
     }
 
     //Method to authenticate user
-    bool login(const string&user, const string&pass){
+    bool login(const std::string&user, const std::string&pass){
     if(username==user && password==pass){
         loggedIn = true;
-        cout<<"Login successful!"<<endl;
+        std::cout <<"Login successful!"<< std::endl;
         return true;
     }
-    cerr << "Login failed: Incorrect username or password."<<endl;
+    std::cerr << "Login failed: Incorrect username or password."<< std::endl;
     return false;
     }
 
     //Method to log out
     void logout(){
     loggedIn= false;
-    cout << "Logged out successfully." <<endl;
+    std::cout << "Logged out successfully." << std::endl;
     }
 
     //Method to check if the user is logged in
@@ -124,7 +122,7 @@ int main()
 
         //Attempt to log in with incorrect password
         if(!myAccount.login("alice","wrongPassword")){
-            cout << "Please try again!" <<endl;
+            std::cout << "Please try again!" << std::endl;
             }
 
         //Load account data
@@ -134,8 +132,8 @@ int main()
             loadedAccount.displayAccountInfo();
             }
        }
-    catch(const exception&e){
-       cerr <<"Error: " <<e.what() <<endl;
+    catch(const std::exception&e){
+       std::cerr <<"Error: " <<e.what() << std::endl;
        }
 
        return 0;
